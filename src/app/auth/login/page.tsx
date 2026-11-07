@@ -1,7 +1,10 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { LinkBreakIcon, WarningCircleIcon } from "@phosphor-icons/react/dist/ssr";
 
+import { SurfaceCard, SurfaceShell } from "@/components/surface-shell";
+import { getSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 import { LoginButton } from "./login-button";
 
@@ -11,49 +14,51 @@ export const metadata: Metadata = {
 
 const LoginPage = ({ searchParams }: PageProps<"/auth/login">) => {
     return (
-        <div className="dark flex flex-1 flex-col">
-        {/* Discord's cool, blue-tinted darks instead of shadcn's neutral greys.
-            Set on an inner element because .dark (unlayered CSS) beats utilities on the same element. */}
-        <div className="flex flex-1 flex-col bg-background text-foreground selection:bg-discord/40 selection:text-white [--background:#1e1f22] [--border:#3f4147] [--card:#2b2d31] [--muted-foreground:#b5bac1]">
-            <div
-                aria-hidden
-                className="pointer-events-none fixed inset-x-0 top-0 h-[28rem] bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgb(88_101_242/0.14),transparent)]"
-            />
+        <SurfaceShell>
+            {/* getSession() reads cookies, so with Cache Components it has to stream inside Suspense. */}
+            <Suspense>
+                <RedirectIfSignedIn />
+            </Suspense>
 
-            <header className="relative px-6 py-5 sm:px-10 sm:py-7">
-                <span className="text-lg font-semibold tracking-tight">maibot</span>
-            </header>
+            <SurfaceCard aria-labelledby="login-heading">
+                <h1 id="login-heading" className="text-2xl font-bold tracking-tight text-balance">
+                    Sign in to maibot
+                </h1>
+                <p className="mt-2 text-base leading-relaxed text-pretty text-muted-foreground">
+                    View your maimai DX scores, rating and B50.
+                </p>
 
-            <main className="relative flex flex-1 items-center justify-center px-4 pb-24">
-                <section
-                    aria-labelledby="login-heading"
-                    className="w-full max-w-[420px] px-2 py-4 animate-in fade-in slide-in-from-bottom-2 duration-500 ease-out motion-reduce:animate-none sm:rounded-xl sm:border sm:border-border sm:bg-card sm:p-10 sm:shadow-[0_24px_48px_-12px_rgb(0_0_0/0.6)]"
-                >
-                    <h1 id="login-heading" className="text-2xl font-bold tracking-tight text-balance">
-                        Sign in to maibot
-                    </h1>
-                    <p className="mt-2 text-base leading-relaxed text-pretty text-muted-foreground">
-                        View your maimai DX scores, rating and B50.
-                    </p>
+                <Suspense>
+                    {searchParams.then(({ error }) => (
+                        <StatusBanner error={typeof error === "string" ? error : undefined} />
+                    ))}
+                </Suspense>
 
-                    <Suspense>
-                        {searchParams.then(({ error }) => (
-                            <StatusBanner error={typeof error === "string" ? error : undefined} />
-                        ))}
-                    </Suspense>
+                <div className="mt-8">
+                    <LoginButton />
+                </div>
 
-                    <div className="mt-8">
-                        <LoginButton />
-                    </div>
-
-                    <p className="mt-4 text-sm leading-relaxed text-pretty text-muted-foreground">
-                        Use the Discord account you already use with the bot.
-                    </p>
-                </section>
-            </main>
-        </div>
-        </div>
+                <p className="mt-4 text-sm leading-relaxed text-pretty text-muted-foreground">
+                    Use the Discord account you already use with the bot.
+                </p>
+            </SurfaceCard>
+        </SurfaceShell>
     );
+};
+
+// Already signed in: go home. Offline or anonymous: stay and show the sign-in card.
+async function RedirectIfSignedIn() {
+    const session = await getSession();
+    if (session.status === "authenticated") redirect("/");
+    return null;
+}
+
+// Codes the OAuth callback sends back as ?error=<code>. Unknown codes fall back to the generic message.
+const ERROR_MESSAGES: Record<string, string> = {
+    access_denied: "Sign-in was cancelled. Authorize maibot on Discord to continue.",
+    invalid_state: "This sign-in link expired. Start again from this page.",
+    oauth_failed: "Discord didn't finish signing you in. Try again in a moment.",
+    bot_unavailable: "maibot is offline, so sign-in couldn't finish. Try again in a few minutes.",
 };
 
 // The OAuth callback redirects back here with ?error=<code>.
@@ -70,10 +75,7 @@ function StatusBanner({ error }: { error?: string }) {
         );
     }
 
-    const message =
-        error === "access_denied"
-            ? "Sign-in was cancelled. Authorize maibot on Discord to continue."
-            : "Couldn't sign in with Discord. Try again in a moment.";
+    const message = ERROR_MESSAGES[error] ?? "Couldn't sign in with Discord. Try again in a moment.";
 
     return (
         <Banner tone="error" icon={<WarningCircleIcon aria-hidden className="mt-0.5 size-5 shrink-0" />}>

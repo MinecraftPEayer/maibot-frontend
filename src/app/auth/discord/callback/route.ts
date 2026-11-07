@@ -1,60 +1,65 @@
+import { createSession } from "@/lib/session";
 import { cookies } from "next/headers";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+const STATE_COOKIE = "discord_oauth2_state";
+
+type LoginErrorCode = 'access_denied' | 'invalid_state' | 'oauth_failed' | 'not_linked' | 'bot_unavailable';
+
+async function fetchDiscordUserId(code: string): Promise<string | null> {
+    try {
+        const tokenRes = await fetch("https://discord.com/api/oauth2/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                client_id: process.env.DISCORD_OAUTH2_CLIENT_ID!,
+                client_secret: process.env.DISCORD_OAUTH2_CLIENT_SECRET!,
+                grant_type: "authorization_code",
+                code,
+                redirect_uri: process.env.DISCORD_OAUTH2_REDIRECT_URI!,
+            }),
+            signal: AbortSignal.timeout(10_000),
+        });
+        if (!tokenRes.ok) return null;
+        const { access_token } = (await tokenRes.json()) as { access_token?: string };
+        if (!access_token) return null;
+
+        const userRes = await fetch("https://discord.com/api/users/@me", {
+            headers: { Authorization: `Bearer ${access_token}` },
+            signal: AbortSignal.timeout(10_000),
+        });
+        if (!userRes.ok) return null;
+        const { id } = (await userRes.json()) as { id?: unknown };
+        return typeof id === "string" ? id : null;
+    } catch {
+        return null;
+    }
+}
 
 export async function GET(request: NextRequest) {
-    const code = request.nextUrl.searchParams.get("code");
-    const state = request.nextUrl.searchParams.get("state");
+    const params = request.nextUrl.searchParams;
+    const fail = (code: LoginErrorCode) => NextResponse.redirect(new URL(`/auth/login?error=${code}`, request.url));    
 
-    if (!code || !state) {
-        return new Response("Missing code or state", { status: 400 });
-    }
+
+    
 
     const cookieStore = await cookies();
-    const storedState = cookieStore.get("discord_oauth2_state")?.value;
+    const storedState = cookieStore.get(STATE_COOKIE)?.value;
+    cookieStore.delete(STATE_COOKIE);
+
+    if (params.get("error") === "access_denied") return fail("access_denied");
+
+    const code = params.get("code");
+    const state = params.get("state");
     
-    if (!storedState || storedState !== state) {
-        return new Response("Invalid state", { status: 400 });
-    }
+    if (!code || !state || !storedState || state !== storedState) return fail('invalid_state');
 
-    const tokenData = new URLSearchParams({
-        client_id: process.env.DISCORD_OAUTH2_CLIENT_ID!,
-        client_secret: process.env.DISCORD_OAUTH2_CLIENT_SECRET!,
-        grant_type: "authorization_code",
-        code,
-        redirect_uri: process.env.DISCORD_OAUTH2_REDIRECT_URI!,
-    });
+    const discordId = await fetchDiscordUserId(code);
+    if (!discordId) return fail('oauth_failed');
 
-    const tokenResponse = await fetch("https://discord.com/api/oauth2/token", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: tokenData.toString(),
-    });
+    const sessionResult =await createSession(discordId)
 
-    if (!tokenResponse.ok) {
-        return new Response("Failed to get access token", { status: 500 });
-    }
+    if (sessionResult !== 'ok') return fail(sessionResult);
 
-    const tokenJson = await tokenResponse.json();
-    const accessToken = tokenJson.access_token;
-
-    const userData = await fetch("https://discord.com/api/users/@me", {
-        headers: {
-            "Authorization": `Bearer ${accessToken}`,
-        },
-    });
-
-    if (!userData.ok) {
-        return new Response("Failed to fetch user data", { status: 500 });
-    }
-
-    const userJson = await userData.json();
-    
-    return new Response(JSON.stringify(userJson), {
-        status: 200,
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+    return NextResponse.redirect(new URL("/", request.url))
 }
