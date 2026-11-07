@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-04T21:00:00Z",
+  "title": "Design System: maibot",
+  "extensions": {
+    "colorMeta": {
+      "discord-blurple": { "role": "primary", "displayName": "Discord Blurple", "canonical": "#5865F2", "tonalRamp": ["#1a1d4a", "#272c73", "#3c45a5", "#4752c4", "#5865f2", "#7f89f5", "#aab1f8", "#d6d9fc"] },
+      "discord-blurple-hover": { "role": "primary", "displayName": "Pressed Blurple", "canonical": "#4752C4" },
+      "discord-blurple-active": { "role": "primary", "displayName": "Deep Blurple", "canonical": "#3C45A5" },
+      "ground": { "role": "neutral", "displayName": "Discord Ground", "canonical": "#1e1f22", "tonalRamp": ["#111214", "#1e1f22", "#2b2d31", "#3f4147", "#4e5058", "#80848e", "#b5bac1", "#dbdee1"] },
+      "card": { "role": "neutral", "displayName": "Raised Card", "canonical": "#2b2d31" },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "#3f4147" },
+      "foreground": { "role": "neutral", "displayName": "Near White", "canonical": "oklch(0.985 0 0)" },
+      "muted-foreground": { "role": "neutral", "displayName": "Quiet Grey", "canonical": "#b5bac1" },
+      "destructive": { "role": "status", "displayName": "Alarm Red", "canonical": "oklch(0.704 0.191 22.216)", "tonalRamp": ["oklch(0.25 0.08 22)", "oklch(0.35 0.12 22)", "oklch(0.45 0.16 22)", "oklch(0.577 0.2 22)", "oklch(0.704 0.191 22.216)", "oklch(0.8 0.12 20)", "oklch(0.885 0.062 18.334)", "oklch(0.95 0.025 18)"] },
+      "error-text": { "role": "status", "displayName": "Pale Red", "canonical": "oklch(0.885 0.062 18.334)" },
+      "warning": { "role": "status", "displayName": "Amber", "canonical": "oklch(0.828 0.189 84.429)", "tonalRamp": ["oklch(0.28 0.06 70)", "oklch(0.4 0.1 70)", "oklch(0.55 0.14 75)", "oklch(0.666 0.179 58.318)", "oklch(0.769 0.188 70.08)", "oklch(0.828 0.189 84.429)", "oklch(0.879 0.169 91.605)", "oklch(0.962 0.059 95.617)"] },
+      "warning-text": { "role": "status", "displayName": "Pale Amber", "canonical": "oklch(0.962 0.059 95.617)" }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Headline", "purpose": "The surface heading." },
+      "title": { "displayName": "Wordmark", "purpose": "The maibot wordmark in the header." },
+      "body": { "displayName": "Body", "purpose": "Supporting line under the heading, in Quiet Grey." },
+      "body-sm": { "displayName": "Body small", "purpose": "Banner text and helper lines." },
+      "label": { "displayName": "Label", "purpose": "Primary button label." },
+      "mono": { "displayName": "Mono", "purpose": "Inline bot commands such as /link." }
+    },
+    "shadows": [
+      { "name": "card-lift", "value": "0 24px 48px -12px rgb(0 0 0 / 0.6)", "purpose": "The desktop card only." }
+    ],
+    "atmosphere": [
+      { "name": "blurple-haze", "value": "radial-gradient(ellipse 60% 100% at 50% 0%, rgb(88 101 242 / 0.14), transparent)", "purpose": "Fixed, 28rem tall, across the top of the viewport." },
+      { "name": "selection", "value": "background rgb(88 101 242 / 0.4); color #fff", "purpose": "Text selection on maibot surfaces." }
+    ],
+    "focus": [
+      { "name": "focus-ring-discord", "value": "0 0 0 2px <surface>, 0 0 0 4px rgb(255 255 255 / 0.8)", "purpose": "Focus on the Discord button; 2px white/80 ring with a 2px offset in the surface color." }
+    ],
+    "motion": [
+      { "name": "entrance", "value": "fade in + translateY(8px) to 0, 500ms ease-out", "purpose": "Single entrance on the main container; none under prefers-reduced-motion." },
+      { "name": "pending-spin", "value": "spin, linear, infinite", "purpose": "Pending spinner on the Discord button; static under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px", "purpose": "Card frame appears at and above; full-bleed below." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Discord Login Button",
+      "kind": "button",
+      "refersTo": "button-discord",
+      "description": "The one blurple action that starts Discord sign-in.",
+      "html": "<button class=\"ds-btn-discord\"><svg width=\"24\" height=\"18\" viewBox=\"0 0 127.14 96.36\" aria-hidden=\"true\"><path fill=\"#fff\" d=\"M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z\"/></svg>Login with Discord</button>",
+      "css": ".ds-btn-discord { display: inline-flex; align-items: center; justify-content: center; gap: 12px; width: 100%; height: 48px; padding: 0 16px; border: 1px solid transparent; border-radius: 10px; background: #5865F2; color: #fff; font-family: 'Google Sans Flex', 'Noto Sans TC', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; outline: none; transition: background-color 150ms, transform 150ms; } .ds-btn-discord:hover { background: #4752C4; } .ds-btn-discord:active { background: #3C45A5; transform: translateY(1px); } .ds-btn-discord:focus-visible { box-shadow: 0 0 0 2px #2b2d31, 0 0 0 4px rgb(255 255 255 / 0.8); }"
+    },
+    {
+      "name": "Raised Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The single lifted container on desktop; full-bleed below 640px.",
+      "html": "<section class=\"ds-card\"><h1 class=\"ds-card-title\">Sign in to maibot</h1><p class=\"ds-card-body\">View your maimai DX scores, rating and B50.</p></section>",
+      "css": ".ds-card { width: 100%; max-width: 420px; padding: 40px; background: #2b2d31; color: oklch(0.985 0 0); border: 1px solid #3f4147; border-radius: 14px; box-shadow: 0 24px 48px -12px rgb(0 0 0 / 0.6); font-family: 'Google Sans Flex', 'Noto Sans TC', sans-serif; } .ds-card-title { margin: 0; font-size: 24px; font-weight: 700; line-height: 1.333; letter-spacing: -0.025em; } .ds-card-body { margin: 8px 0 0; font-size: 16px; line-height: 1.625; color: #b5bac1; }"
+    },
+    {
+      "name": "Error Banner",
+      "kind": "custom",
+      "refersTo": "banner-error",
+      "description": "Inline error status with a Phosphor warning-circle icon and recovery copy.",
+      "html": "<div class=\"ds-banner ds-banner-error\" role=\"alert\"><svg class=\"ds-banner-icon\" viewBox=\"0 0 256 256\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88 88.1 88.1 0 0 1-88 88Zm-8-80V80a8 8 0 0 1 16 0v56a8 8 0 0 1-16 0Zm20 36a12 12 0 1 1-12-12 12 12 0 0 1 12 12Z\"/></svg><p>Couldn't sign in with Discord. Try again in a moment.</p></div>",
+      "css": ".ds-banner { display: flex; gap: 12px; padding: 12px 16px; border: 1px solid; border-radius: 10px; font-family: 'Google Sans Flex', 'Noto Sans TC', sans-serif; font-size: 14px; line-height: 1.625; } .ds-banner p { margin: 0; } .ds-banner-icon { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; } .ds-banner-error { border-color: oklch(0.704 0.191 22.216 / 0.3); background: oklch(0.704 0.191 22.216 / 0.1); color: oklch(0.885 0.062 18.334); }"
+    },
+    {
+      "name": "Warning Banner",
+      "kind": "custom",
+      "refersTo": "banner-warning",
+      "description": "Inline warning status (e.g. account not linked) with a Phosphor link-break icon and an inline mono command.",
+      "html": "<div class=\"ds-banner-w\" role=\"alert\"><svg class=\"ds-banner-w-icon\" viewBox=\"0 0 256 256\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M198.63 57.37a32 32 0 0 0-45.19-.06l-11.79 11.7a8 8 0 1 1-11.26-11.36l11.8-11.71a48 48 0 0 1 67.88 67.88l-11.71 11.8a8 8 0 0 1-11.36-11.26l11.7-11.79a32 32 0 0 0-.07-45.2ZM114.35 175.65l-11.79 11.7a32 32 0 0 1-45.26-45.26l11.7-11.79a8 8 0 0 0-11.36-11.26l-11.71 11.8a48 48 0 0 0 67.88 67.88l11.8-11.71a8 8 0 0 0-11.26-11.36Z\"/></svg><p>Your Discord account isn't linked to a maimai account yet. Run <code class=\"ds-cmd\">/link</code> in Discord, then sign in again.</p></div>",
+      "css": ".ds-banner-w { display: flex; gap: 12px; padding: 12px 16px; border: 1px solid oklch(0.828 0.189 84.429 / 0.3); border-radius: 10px; background: oklch(0.828 0.189 84.429 / 0.1); color: oklch(0.962 0.059 95.617); font-family: 'Google Sans Flex', 'Noto Sans TC', sans-serif; font-size: 14px; line-height: 1.625; } .ds-banner-w p { margin: 0; } .ds-banner-w-icon { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; } .ds-cmd { padding: 2px 6px; border-radius: 4px; background: oklch(0.879 0.169 91.605 / 0.15); font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Discord's Own Room",
+    "overview": "maibot lives inside the player's Discord habit, so the web side borrows Discord's own dark surfaces rather than shadcn's neutral greys: a near-black, faintly blue ground, one slightly lighter raised card, hairline borders, and Discord's blurple held back for the single action that leaves for Discord. The bar is the finish of Discord's own login screen, not a dashboard template.\n\nDensity is low and the voice is quiet. A surface shows a small wordmark, a direct heading, one supporting line, and the action. Status is spoken in tinted inline banners that say what happened and what to do next. Copy is English, sentence case.\n\nMotion is a single entrance: the main container fades in and rises 8px over 500ms with ease-out, and does nothing when reduced motion is requested.",
+    "keyCharacteristics": [
+      "Cool Discord darks (blue-tinted near-black ground, lighter card, hairline border).",
+      "Blurple reserved for the Discord action; elsewhere only as faint atmosphere.",
+      "One raised card on desktop that dissolves to full-bleed content on small screens.",
+      "Tinted inline status banners with a Phosphor icon and recovery copy.",
+      "One entrance motion, reduced-motion safe."
+    ],
+    "rules": [
+      { "name": "The One Blurple Rule", "body": "Blurple at full strength fills only the Discord action. Elsewhere it appears only as atmosphere: a radial haze at 14% opacity across the top 28rem of the viewport, and text selection at 40%.", "section": "colors" },
+      { "name": "The Discord Darks Rule", "body": "Dark surfaces use the cool Discord values (ground, card, hairline, quiet grey), never shadcn's stock neutral dark greys. The overrides go on an inner wrapper inside the `.dark` element, because the unlayered `.dark` rule beats utilities placed on the same element.", "section": "colors" },
+      { "name": "The Literal Command Rule", "body": "A bot command the player must type is set in JetBrains Mono inside a small tinted chip; prose around it stays in the sans.", "section": "typography" }
+    ],
+    "dos": [
+      "Do set dark surfaces on Discord Ground with one Raised Card and a Hairline border.",
+      "Do keep blurple fill for the Discord action, with hover and active steps from the palette.",
+      "Do put status in a tinted inline banner with a Phosphor icon and recovery copy.",
+      "Do set bot commands in JetBrains Mono inside a small tinted chip.",
+      "Do use the single fade-and-rise entrance (8px, 500ms, ease-out) and turn it off for reduced motion.",
+      "Do drop the card frame below 640px and let content sit full-bleed."
+    ],
+    "donts": [
+      "Don't use shadcn's stock neutral dark greys on a maibot surface; use the Discord darks.",
+      "Don't spend blurple on headings, links, borders, or secondary buttons.",
+      "Don't use an official SEGA / maimai look."
+    ]
+  }
+}
