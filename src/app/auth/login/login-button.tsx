@@ -7,6 +7,10 @@ import { CircleNotchIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import DiscordLogo from "@/assets/discord-logo.svg";
 
+/** The blurple Login with Discord button (the one place blurple fills a control). */
+export const discordButtonClassName =
+    "h-12 w-full gap-3 rounded-lg bg-discord text-base font-semibold text-white hover:bg-discord-hover active:bg-[#3C45A5] focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:focus-visible:ring-offset-card aria-disabled:cursor-progress aria-disabled:hover:bg-discord";
+
 export function LoginButton() {
     const [pending, setPending] = useState(false);
 
@@ -29,7 +33,7 @@ export function LoginButton() {
                 setPending(true);
             }}
             aria-disabled={pending}
-            className="h-12 w-full gap-3 rounded-lg bg-discord text-base font-semibold text-white hover:bg-discord-hover active:bg-[#3C45A5] focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:focus-visible:ring-offset-card aria-disabled:cursor-progress aria-disabled:hover:bg-discord"
+            className={discordButtonClassName}
         >
             {pending ? (
                 <CircleNotchIcon aria-hidden className="size-5 animate-spin motion-reduce:animate-none" />

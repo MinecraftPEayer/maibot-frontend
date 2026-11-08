@@ -6,7 +6,7 @@ export function SurfaceShell({ children }: { children: React.ReactNode }) {
         <div className="dark flex flex-1 flex-col">
             {/* Discord's cool, blue-tinted darks instead of shadcn's neutral greys (secondary is Discord's button grey).
                 Set on an inner element because .dark (unlayered CSS) beats utilities on the same element. */}
-            <div className="flex flex-1 flex-col bg-background text-foreground selection:bg-discord/40 selection:text-white [--background:#1e1f22] [--border:#3f4147] [--card:#2b2d31] [--muted-foreground:#b5bac1] [--secondary:#4e5058] [--secondary-foreground:#ffffff] [--secondary-hover:#6d6f78] [--secondary-active:#5d6069]">
+            <div className="flex flex-1 flex-col bg-background text-foreground selection:bg-discord/40 selection:text-white [--background:#1e1f22] [--border:#3f4147] [--card:#2b2d31] [--muted-foreground:#b5bac1] [--secondary:#4e5058] [--secondary-foreground:#ffffff] [--secondary-hover:#6d6f78] [--secondary-active:#5d6069] [--action:#f2f3f5] [--action-foreground:#1e1f22] [--action-hover:#dbdee1] [--action-active:#c4c9ce] [--success:#23a55a]">
                 <div
                     aria-hidden
                     className="pointer-events-none fixed inset-x-0 top-0 h-[28rem] bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgb(88_101_242/0.14),transparent)]"
